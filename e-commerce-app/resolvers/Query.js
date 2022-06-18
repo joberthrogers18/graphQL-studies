@@ -2,8 +2,19 @@ exports.Query = {
   hello: () => {
     return ["hello", null, "friends"];
   },
-  products: (parent, args, { products }) => {
-    return products;
+  products: (parent, { filter }, { products }) => {
+    let filteredProducts = products;
+
+    if (filter) {
+      console.log(filter);
+      if ("onSale" in filter) {
+        filteredProducts = filteredProducts.filter((product) => {
+          return product.onSale === filter.onSale;
+        });
+      }
+    }
+
+    return filteredProducts;
   },
   product: (parent, { id }, { products }) => {
     const product = products.find((product) => product.id === id);

@@ -1,8 +1,17 @@
 exports.Category = {
-  products: ({ id }, args, { products }) => {
-    const productsByCategory = products.filter(
-      (product) => product.categoryId === id
+  products: ({ id: categoryId }, { filter }, { products }) => {
+    let filteredProducts = products.filter(
+      (product) => product.categoryId === categoryId
     );
-    return productsByCategory;
+
+    if (filter) {
+      if ("onSale" in filter) {
+        filteredProducts = filteredProducts.filter(
+          (product) => product.onSale == filter.onSale
+        );
+      }
+    }
+
+    return filteredProducts;
   },
 };
