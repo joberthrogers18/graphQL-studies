@@ -56,6 +56,24 @@ exports.Mutation = {
       (category) => category.id !== idCategory
     );
 
+    db.products = db.products.array.map((product) => {
+      if (product.categoryId === idCategory)
+        return {
+          ...product,
+          categoryId: null,
+        };
+
+      return product;
+    });
+
+    return true;
+  },
+
+  deleteProduct: (parent, { id: idProduct }, { db }) => {
+    db.products = db.products.filter((product) => product.id !== idProduct);
+
+    db.reviews = db.reviews.filter((review) => review.productId !== idProduct);
+
     return true;
   },
 };
