@@ -2,14 +2,33 @@ exports.Query = {
   hello: () => {
     return ["hello", null, "friends"];
   },
-  products: (parent, { filter }, { products }) => {
+  products: (parent, { filter }, { products, reviews }) => {
     let filteredProducts = products;
 
     if (filter) {
-      console.log(filter);
-      if ("onSale" in filter) {
+      const { avgRating, onSale } = filter;
+
+      if (onSale) {
+        filteredProducts = filteredProducts.filter(
+          (product) => product.onSale == filter.onSale
+        );
+      }
+
+      if (avgRating && avgRating >= 1 && avgRating <= 5) {
         filteredProducts = filteredProducts.filter((product) => {
-          return product.onSale === filter.onSale;
+          let sumRatingProduct = 0;
+          let numberOfReviews = 0;
+
+          reviews.forEach((review) => {
+            if (review.productId === product.id) {
+              sumRatingProduct += review.rating;
+              numberOfReviews++;
+            }
+          });
+
+          let avgProductRating = sumRatingProduct / numberOfReviews;
+
+          return avgProductRating >= avgRating;
         });
       }
     }
