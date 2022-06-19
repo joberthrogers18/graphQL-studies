@@ -13,4 +13,24 @@ exports.Mutation = {
 
     return newCategory;
   },
+
+  addProduct: (parent, { input }, { products }) => {
+    const { name, description, quantity, price, onSale, image, categoryId } =
+      input;
+
+    const newProduct = {
+      id: uuid(),
+      name,
+      description,
+      quantity,
+      price,
+      onSale,
+      image,
+      categoryId,
+    };
+
+    products.push(newProduct);
+
+    return newProduct;
+  },
 };
