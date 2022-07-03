@@ -97,5 +97,37 @@ export const Mutation = {
             userErrors: [],
             post: response
         }
+    },
+
+    postDelete: async (
+        _: any,
+        { postId }: { postId: string },
+        { prisma }: Context
+    ): Promise<postPayloadType> => {
+        const existingPost = await prisma.post.findUnique({
+            where: {
+                id: parseInt(postId)
+            }
+        })
+
+        if (!existingPost) {
+            return {
+                userErrors: [{
+                    message: "The post does not exists in database!"
+                }],
+                post: null
+            }
+        }
+
+        const response = await prisma.post.delete({
+            where: {
+                id: parseInt(postId)
+            }
+        });
+
+        return {
+            userErrors: [],
+            post: response
+        }
     }
 } 
