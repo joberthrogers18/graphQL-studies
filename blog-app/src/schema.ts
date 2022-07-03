@@ -37,7 +37,7 @@ export const typeDefs = gql`
     }
 
     type PostPayload {
-        UserErrors: [UserError!]!
+        userErrors: [UserError!]!
         post: Post
     }
 `
