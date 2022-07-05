@@ -1,5 +1,5 @@
 import { Query } from "./Query"
-import { Mutation } from "./Mutation"
+import { Mutation } from "./Mutations/Mutation"
 
 export const resolvers = {
     Query,
