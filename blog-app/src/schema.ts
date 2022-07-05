@@ -51,6 +51,6 @@ export const typeDefs = gql`
 
     type AuthPayLoad {
         userErrors: [UserError!]!
-        user: User
+        token: String
     }
 `

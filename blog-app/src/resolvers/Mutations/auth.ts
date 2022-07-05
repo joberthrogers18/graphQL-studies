@@ -2,6 +2,7 @@ import { Context } from "../../index";
 import { User } from '@prisma/client';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import JWT from 'jsonwebtoken';
 
 interface SignupArgs {
     email: string;
@@ -14,7 +15,7 @@ interface authPayloadType {
     userErrors: {
         message: string
     }[]
-    user: User | null
+    token: string | null
 }
 
 export const authResolvers = {
@@ -53,7 +54,7 @@ export const authResolvers = {
         if (errors.length > 0) {
             return {
                 userErrors: errors,
-                user: null,
+                token: null,
             }
         }
 
@@ -67,9 +68,23 @@ export const authResolvers = {
             }
         });
 
+        await prisma.profile.create({
+            data: {
+                bio,
+                userId: user.id
+            }
+        });
+
+        const token = await JWT.sign({
+            userId: user.id,
+            email: user.email
+        }, process.env.JWT_SIGNATURE as string, {
+            expiresIn: 3600000,
+        })
+
         return {
             userErrors: [],
-            user,
+            token,
         };
     }
 };
