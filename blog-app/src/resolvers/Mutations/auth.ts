@@ -5,10 +5,19 @@ import bcrypt from 'bcryptjs';
 import JWT from 'jsonwebtoken';
 
 interface SignupArgs {
-    email: string;
+    credentials: {
+        email: string;
+        password: string;
+    }
     name: string;
-    password: string;
     bio: string;
+}
+
+interface SigninArgs {
+    credentials: {
+        email: string;
+        password: string;
+    }
 }
 
 interface authPayloadType {
@@ -21,10 +30,11 @@ interface authPayloadType {
 export const authResolvers = {
     signup: async (
         _: any,
-        { email, name, password, bio }: SignupArgs,
+        { credentials, name, bio }: SignupArgs,
         { prisma }: Context
     ): Promise<authPayloadType> => {
         let errors: { message: string }[] = [];
+        const { email, password } = credentials;
 
         if (!validator.isEmail(email)) {
             errors.push({
@@ -86,5 +96,50 @@ export const authResolvers = {
             userErrors: [],
             token,
         };
+    },
+
+    signin: async (
+        _: any,
+        { credentials }: SigninArgs,
+        { prisma }: Context
+    ): Promise<authPayloadType> => {
+        const { email, password } = credentials;
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+
+        if (!user) {
+            return {
+                userErrors: [{
+                    message: 'Invalid credentials'
+                }],
+                token: null,
+            }
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return {
+                userErrors: [{
+                    message: 'Invalid credentials'
+                }],
+                token: null,
+            }
+        }
+
+        return {
+            userErrors: [],
+            token: JWT.sign(
+                { userId: user.id },
+                process.env.JWT_SIGNATURE as string,
+                {
+                    expiresIn: 3600000,
+                }
+            )
+        }
     }
 };
