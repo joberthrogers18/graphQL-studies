@@ -1,5 +1,5 @@
 import { Post, User } from "@prisma/client";
-import { Context } from "../..";
+import { Context } from "..";
 
 interface ProfileParentType {
     id: number;

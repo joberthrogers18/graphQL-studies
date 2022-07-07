@@ -29,6 +29,9 @@ export const Query = {
 
     posts: (_: any, __: any, { prisma }: Context): Promise<Post[]> => {
         return prisma.post.findMany({
+            where: {
+                published: true,
+            },
             orderBy: [
                 {
                     createdAt: "desc"
