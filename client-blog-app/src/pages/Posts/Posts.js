@@ -35,6 +35,7 @@ export default function Posts() {
     <div>
       {posts.map((post) => (
         <Post
+          key={post.id}
           title={post.title}
           content={post.content}
           date={post.createdAt}
