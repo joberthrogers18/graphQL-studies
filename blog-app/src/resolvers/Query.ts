@@ -20,11 +20,11 @@ export const Query = {
         { userId }: { userId: string },
         { prisma, userInfo }: Context
     ) => {
-        const isMyProfile = Number(userId) === userInfo?.userId;
+        const isMyProfile = Number(userId) === Number(userInfo?.userId);
 
         const profile = await prisma.profile.findUnique({
             where: {
-                id: Number(userId),
+                userId: Number(userId),
             }
         });
 
