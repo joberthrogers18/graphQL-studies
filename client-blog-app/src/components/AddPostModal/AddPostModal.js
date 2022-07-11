@@ -1,16 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { gql, useMutation } from "@apollo/client";
+
+const CREATE_POST = gql`
+  mutation PostCreate($title: String!, $content: String!) {
+    postCreate(post: { title: $title, content: $content }) {
+      post {
+        title
+      }
+      userErrors {
+        message
+      }
+    }
+  }
+`;
 
 export default function AddPostModal() {
   const [show, setShow] = useState(false);
+
+  const [createPost, { data, loading }] = useMutation(CREATE_POST);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    if (!content || !title) return;
+
+    createPost({
+      variables: {
+        title,
+        content,
+      },
+    });
+
+    handleClose();
+  };
+
+  useEffect(() => {
+    if (data && data.postCreate.userErrors.length) {
+      setError(data.postCreate.userErrors[0].message);
+    }
+
+    if (data && data.postCreate.token) {
+      localStorage.setItem("token", data.postCreate.token);
+    }
+  }, [data]);
 
   return (
     <>
@@ -54,6 +92,7 @@ export default function AddPostModal() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
+          {error && <p>{error}</p>}
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
