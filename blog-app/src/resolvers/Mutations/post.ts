@@ -184,6 +184,7 @@ export const postResolvers = {
         { postId }: { postId: string },
         { prisma, userInfo }: Context
     ): Promise<postPayloadType> => {
+        console.log(postId);
         if (!userInfo) {
             return {
                 userErrors: [{

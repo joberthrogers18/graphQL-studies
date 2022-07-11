@@ -15,7 +15,7 @@ export const User = {
         if (isOwnProfile) {
             return prisma.post.findMany({
                 where: {
-                    id: parent.id,
+                    authorId: parent.id,
                 },
                 orderBy: [{
                     createdAt: 'desc'
@@ -24,7 +24,7 @@ export const User = {
         } else {
             return prisma.post.findMany({
                 where: {
-                    id: parent.id,
+                    authorId: parent.id,
                     published: true
                 },
                 orderBy: [{
