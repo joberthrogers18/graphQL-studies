@@ -19,7 +19,7 @@ export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [signin, { data, loading }] = useMutation(SIGNIN);
+  const [signin, { data }] = useMutation(SIGNIN);
 
   const handleClick = () => {
     signin({

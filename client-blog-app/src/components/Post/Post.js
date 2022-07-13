@@ -37,10 +37,10 @@ export default function Post({
   id,
   isMyProfile,
 }) {
-  const [publishPost, { data, loading }] = useMutation(PUBLISH_POST);
-  const [unpublishPost, { data1, loading1 }] = useMutation(UNPUBLISH_POST);
+  const [publishPost] = useMutation(PUBLISH_POST);
+  const [unpublishPost] = useMutation(UNPUBLISH_POST);
 
-  const formatedDate = new Date(Number(date));
+  const formattedDate = new Date(Number(date));
   return (
     <div
       className="Post"
@@ -81,7 +81,7 @@ export default function Post({
       <div className="Post__header-container">
         <h2>{title}</h2>
         <h4>
-          Created At {`${formatedDate}`.split(" ").splice(0, 3).join(" ")} by{" "}
+          Created At {`${formattedDate}`.split(" ").splice(0, 3).join(" ")} by{" "}
           {user}
         </h4>
       </div>

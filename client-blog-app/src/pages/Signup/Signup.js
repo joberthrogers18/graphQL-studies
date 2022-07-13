@@ -29,7 +29,7 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
 
-  const [signup, { data, loading }] = useMutation(SIGNUP);
+  const [signup, { data }] = useMutation(SIGNUP);
 
   const handleClick = () => {
     signup({
